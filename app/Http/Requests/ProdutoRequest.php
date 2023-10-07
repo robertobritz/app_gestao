@@ -26,6 +26,7 @@ class ProdutoRequest extends FormRequest
             'descricao' => 'required|min:3|max:2000',
             'peso' => 'required|integer',
             'unidade_id' => 'exists:unidades,id',
+            'fornecedor_id' => 'exists:fornecedores,id'
         ];
     }
 
@@ -38,7 +39,8 @@ class ProdutoRequest extends FormRequest
             'descricao.min' => 'O campo descrição deve ter no mínimo 3 caracteres',
             'descricao.max' => 'O campo descrição deve ter no máximo 2000 caracteres',
             'peso.integer' => 'O campo peso deve ser um número inteiro',
-            'unidade_id.exists' => 'A unidade de medida informada não existe'
+            'unidade_id.exists' => 'A unidade de medida informada não existe',
+            'fornecedor_id.exists' => 'O fornecedor informado não existe'
         ];
     }
 }

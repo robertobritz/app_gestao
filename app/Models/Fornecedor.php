@@ -15,4 +15,9 @@ class Fornecedor extends Model
     protected $table = 'fornecedores';
 
     protected $fillable = ['nome', 'site', 'uf', 'email'];
+
+    public function produtos(){
+        return $this->hasMany(Item::class, 'fornecedor_id', 'id'); // FK e depois PK
+        //return $this->hasMany(Item::class); // Como está padronizado FK e PK, poderia ser esta relação direta
+    }
 }

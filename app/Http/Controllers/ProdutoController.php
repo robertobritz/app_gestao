@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProdutoRequest;
+use App\Models\Fornecedor;
+use App\Models\Item;
 use App\Models\Produto;
+use App\Models\ProdutoDetalhe;
 use App\Models\Unidade;
 use Illuminate\Http\Request;
 
@@ -14,7 +17,20 @@ class ProdutoController extends Controller
      */
     public function index(Request $request)
     {
-        $produtos = Produto::paginate(10);
+        $produtos = Item::with('itemDetalhe','fornecedor')->paginate(10);
+
+        //dd($produtos);
+        // MÉTODO MANUAL PARA ENCONTRAR OS REGISTROS
+        // foreach($produtos as $key => $produto){
+
+        //     $produtoDetalhe = ProdutoDetalhe::where('produto_id', $produto->id)->first();
+
+        //     if(isset($produtoDetalhe)){
+        //         $produtos[$key]['comprimento'] = $produtoDetalhe->comprimento;
+        //         $produtos[$key]['largura'] = $produtoDetalhe->largura;
+        //         $produtos[$key]['altura'] = $produtoDetalhe->altura;
+        //     }
+        // }
 
         return view('app.produto.index', ['produtos' => $produtos, 'request' => $request->all()]);
     
@@ -26,7 +42,8 @@ class ProdutoController extends Controller
     public function create()
     {
         $unidades = Unidade::all();
-        return view('app.produto.create', ['unidades' => $unidades]);
+        $fornecedores = Fornecedor::all();
+        return view('app.produto.create', ['unidades' => $unidades, 'fornecedores' => $fornecedores]);
     }
 
     /**
@@ -34,7 +51,7 @@ class ProdutoController extends Controller
      */
     public function store(ProdutoRequest $request)
     {
-        Produto::create($request->all());
+        Item::create($request->all());
         return redirect()->route('produto.index');
     }
 
@@ -53,14 +70,15 @@ class ProdutoController extends Controller
     public function edit(Produto $produto)
     {
         $unidades = Unidade::all();
-        
-        return view('app.produto.edit', compact('produto','unidades'));
+        $fornecedores = Fornecedor::all();
+
+        return view('app.produto.edit', compact('produto','unidades','fornecedores'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProdutoRequest $request, Produto $produto)
+    public function update(ProdutoRequest $request, Item $produto)
     {
         //$request->all(); // Todas as informações recebidas pelo formulário
         //$produto ; // é a intância do produto antes de realizar o update
